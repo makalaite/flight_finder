@@ -12,7 +12,7 @@ class Ff_AirLines_Controller extends Controller {
 	 */
 	public function index()
 	{
-		//
+		return view('admin.list');
 	}
 
 	/**
