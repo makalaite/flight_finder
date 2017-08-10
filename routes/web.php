@@ -11,9 +11,10 @@
 |
 */
 
-//Route::get('/', function () {
-//    return view('welcome');
+//Route::group(['prefix' => 'data'], function () {
+//    Route::get('/', ['as' => 'app.data.index', 'uses' => 'FakeDataController@fakeData']);
 //});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

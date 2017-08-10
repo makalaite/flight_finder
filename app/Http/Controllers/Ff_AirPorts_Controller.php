@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Ff_AirPorts_Model;
 use Illuminate\Routing\Controller;
 
 class Ff_AirPorts_Controller extends Controller {
@@ -12,7 +13,12 @@ class Ff_AirPorts_Controller extends Controller {
 	 */
 	public function index()
 	{
-		//
+        $config['list'] = Ff_AirPorts_Model::get()->toArray();
+
+        $config['tableName'] = 'Airports';
+        $config['serviceTitle'] = 'Airports list';
+
+        return view('admin.list', $config);
 	}
 
 	/**
