@@ -77,19 +77,31 @@
                 </div>
             @endif
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
+                <div class="content">
+                    <div class="title m-b-md">
+                        Flight finder
+                    </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+
+                    <div >
+                        {!! Form::open(['method'=>'GET', 'url'=>$route]) !!}
+                        {{Form::label('from', 'From')}}
+                        {{Form::select('origin',$origin)}}
+
+                        {{Form::label('to', 'To')}}
+                        {{Form::select('destination',$destination)}}
+
+                        {{Form::label('date', 'Date')}}
+                        {{Form::date('departure', $date)}}
+
+                    </div>
+
+                    {{Form::submit(('Search')) }}
+
+                    {!! Form::close() !!}
+
+
                 </div>
-            </div>
         </div>
     </body>
 </html>

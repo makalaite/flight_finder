@@ -69,5 +69,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
         });
     });
 });
-
+Route::get('/search', ['as' => 'app.search.index', 'uses' => 'SearchFlightsController@index']);
 
