@@ -61,7 +61,7 @@ class UseFakeData extends Command
     {
         $faker = Factory::create();
 
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             Ff_AirLines_Model::create([
                 'id' => $faker->uuid,
                 'name' => $faker->domainWord
@@ -77,7 +77,7 @@ class UseFakeData extends Command
             ]);
         }
 
-        for ($i = 0; $i < 300; $i++) {
+        for ($i = 0; $i < 3000; $i++) {
             Ff_Flights_Model::create([
                 'id' => $faker->uuid,
                 'arival' => $arrival = Carbon::now(),
