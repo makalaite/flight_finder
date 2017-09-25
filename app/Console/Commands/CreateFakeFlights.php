@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Ff_AirLines_Model;
+use App\Models\Ff_AirPorts_Model;
 use App\Models\Ff_Flights_Model;
 use Carbon\Carbon;
 use Faker\Factory;
@@ -45,11 +47,11 @@ class CreateFakeFlights extends Command
         for ($i = 1; $i <= 5; $i++) {
             Ff_Flights_Model::create([
                 'id' => $faker->uuid,
-                'origin_id' => FFAirports::all()->random()->id,
-                'destination_id' => FFAirports::all()->random()->id,
+                'origin_id' => Ff_AirPorts_Model::all()->random()->id,
+                'destination_id' => Ff_AirPorts_Model::all()->random()->id,
                 'departure' => $time->toDateTimeString(),
                 'arival' => $time->addMinutes(rand(30, 960))->toDateTimeString(),
-                'airline_id' => FFAirlines::all()->random()->id,
+                'airline_id' => Ff_AirLines_Model::all()->random()->id,
             ]);
         }
         return redirect()->route('app.flights.index');
