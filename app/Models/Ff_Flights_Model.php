@@ -20,7 +20,7 @@ class Ff_Flights_Model extends CoreModel
         return $this->hasOne(Ff_AirPorts_Model::class, 'id', 'destination_id');
     }
 
-    public function airline()
+    public function airportName()
     {
         return $this->hasOne(Ff_AirLines_Model::class, 'id', 'airline_id');
     }
