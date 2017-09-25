@@ -16,30 +16,33 @@ class SearchFlightsController extends Controller
      */
     public function index()
     {
-        $config['route'] = route('app.search.index');
-        $config['origin'] = Ff_AirPorts_Model::pluck('name', 'id')->toArray();
-        $config['destination'] = Ff_AirPorts_Model::pluck('name', 'id')->toArray();
+        $config['origin_id'] = Ff_AirPorts_Model::pluck('name', 'id');
+        $config['destination_id'] = Ff_AirPorts_Model::pluck('name', 'id');
         $config['date'] = Carbon::now('Europe/Vilnius')->format('Y-m-d');
+        $config['flights'] = $this->getFlights();
 
-        $data = request()->all();
-//        dd($data);
-        if($data){
-            $config['data'] = $this->getFlights($data);
-            dd($config);
-        }
         return view ('welcome', $config);
     }
 
-    public function getFlights($data)
+    public function getFlights()
     {
-        $con = Ff_Flights_Model::where('origin_id', $data['origin'])->
-        where('destination_id', $data['destination'])->
-        where('departure', '>=', $data['departure'])->
-        where('departure', '<=', $data['departure'] . '23:59:59')->
-        get()->toArray();
+        $data = request()->all();
+        if (sizeof($data) == 0)
+        {
+        } else {
 
+            $origin_id = $data['origin_id'];
+            $destination_id = $data['destination_id'];
+            $departure = $data['departure'];
 
-        return $con;
+            $config['flights'] = Ff_Flights_Model::where('origin_id', '=', $origin_id)->
+            where('destination_id', '=', $destination_id)->
+            where('departure', '>=', $departure)->
+            where('departure', '<=', $departure . '23:59:59')->
+            get()->toArray();
+
+            return $config['flights'];
+        }
     }
 
     /**

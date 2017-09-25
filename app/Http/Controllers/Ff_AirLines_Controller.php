@@ -13,10 +13,10 @@ class Ff_AirLines_Controller extends Controller {
 	 */
 	public function index()
 	{
-	    $config['list'] = Ff_AirLines_Model::get()->toArray();
+	    $config['list'] = Ff_AirLines_Model::paginate(15)->toArray();
 
-        $config['tableName'] = 'Airlines';
-        $config['serviceTitle'] = 'Airlines list';
+        $config['pageTitle'] = 'Airlines';
+        $config['route'] = route('app.airlines.create');
 
 		return view('admin.list', $config);
 	}
@@ -29,7 +29,8 @@ class Ff_AirLines_Controller extends Controller {
 	 */
 	public function create()
 	{
-		//
+        $config['pageTitle'] = 'Airlines';
+        return view('admin.formAirlines', $config);
 	}
 
 	/**
@@ -40,7 +41,12 @@ class Ff_AirLines_Controller extends Controller {
 	 */
 	public function store()
 	{
-		//
+        $data = request()->all();
+//		$data['id'] = Uuid::uuid4();
+        Ff_AirLines_Model::create([
+            'name' => $data['name']
+        ]);
+        return redirect()->route('app.airlines.index');
 	}
 
 	/**

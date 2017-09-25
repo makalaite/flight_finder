@@ -13,14 +13,8 @@ class Ff_Countries_Controller extends Controller {
 	 */
 	public function index()
 	{
-        $config['list'] = Ff_Countries_Model::get()->toArray();
-        $config['tableName'] = 'Countries';
-        $config['serviceTitle'] = 'Countries list';
-
-        //$config['route'] = route('app.users.create');
-
-        //$config['edit'] = 'app.users.edit';
-        //$config['delete'] = 'app.users.destroy';
+        $config['list'] = Ff_Countries_Model::paginate(15)->toArray();
+        $config['pageTitle'] = 'Countries';
 
         return view('admin.list', $config);
 	}

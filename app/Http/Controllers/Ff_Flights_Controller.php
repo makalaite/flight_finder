@@ -1,6 +1,9 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Ff_AirLines_Model;
+use App\Models\Ff_AirPorts_Model;
 use App\Models\Ff_Flights_Model;
+use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 
 class Ff_Flights_Controller extends Controller {
@@ -13,11 +16,14 @@ class Ff_Flights_Controller extends Controller {
 	 */
 	public function index()
 	{
-        $config['list'] = Ff_Flights_Model::get()->toArray();
+        $config['list'] = Ff_Flights_Model::paginate(15)->toArray();
 
-        $config['tableName'] = 'Flights';
-        $config['serviceTitle'] = 'Flights list';
-
+        foreach ($config['list']['data'] as $key => &$value){
+            $value['airport_name'] = $value['airport_name']['name'];
+        }
+        $config['pageTitle'] = 'Flights';
+        $config['route'] = route('app.flights.create');
+        $config['faker'] = route('app.flights.faker');
         return view('admin.list', $config);
 	}
 
@@ -29,7 +35,13 @@ class Ff_Flights_Controller extends Controller {
 	 */
 	public function create()
 	{
-		//
+        $config['pageTitle'] = 'Flights';
+        $config['origin_airport'] = Ff_AirPorts_Model::pluck('name', 'id');
+        $config['destination_airport'] = Ff_AirPorts_Model::pluck('name', 'id');
+        $config['airline'] = Ff_AirLines_Model::pluck('name', 'id');
+        $config['arrival_date'] = Carbon::now('Europe/Vilnius');
+        $config['departure_date'] = Carbon::now('Europe/Vilnius');
+        return view('admin.formFlights', $config);
 	}
 
 	/**
@@ -40,7 +52,15 @@ class Ff_Flights_Controller extends Controller {
 	 */
 	public function store()
 	{
-		//
+        $data = request()->all();
+        Ff_Flights_Model::create([
+            'origin_id' => $data['origin_id'],
+            'destination_id' => $data['destination_id'],
+            'airline_id' => $data['airline_id'],
+            'departure' => $data['departure'],
+            'arival' => $data['arrival']
+        ]);
+        return redirect()->route('app.flights.index');
 	}
 
 	/**

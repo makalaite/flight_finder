@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Ff_AirPorts_Model;
+use App\Models\Ff_Countries_Model;
 use Illuminate\Routing\Controller;
 
 class Ff_AirPorts_Controller extends Controller {
@@ -13,10 +14,10 @@ class Ff_AirPorts_Controller extends Controller {
 	 */
 	public function index()
 	{
-        $config['list'] = Ff_AirPorts_Model::get()->toArray();
+        $config['list'] = Ff_AirPorts_Model::paginate(15)->toArray();
 
-        $config['tableName'] = 'Airports';
-        $config['serviceTitle'] = 'Airports list';
+        $config['pageTitle'] = 'Airports';
+        $config['route'] = route('app.airports.create');
 
         return view('admin.list', $config);
 	}
@@ -29,7 +30,9 @@ class Ff_AirPorts_Controller extends Controller {
 	 */
 	public function create()
 	{
-		//
+        $config['pageTitle'] = 'Airports';
+        $config['country_id'] = Ff_Countries_Model::pluck('name', 'id');
+        return view('admin.formAirports', $config);
 	}
 
 	/**
@@ -40,7 +43,14 @@ class Ff_AirPorts_Controller extends Controller {
 	 */
 	public function store()
 	{
-		//
+        $data = request()->all();
+        Ff_AirPorts_Model::create([
+            'name' => $data['name'],
+            'id' => $data['id'],
+            'countrie_id' => $data['country_id'],
+            'city' => $data['city']
+        ]);
+        return redirect()->route('app.airports.index');
 	}
 
 	/**
