@@ -1,0 +1,59 @@
+#menu {
+    background-color: #d5d5d5;
+    width: 180px;
+    height: 100%;
+    /*color: #d5d5d5;*/
+    position: fixed;
+    text-align: center;
+    font-weight: bold;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    background-color: #f7ecb5;
+}
+
+.page-content {
+    width: 100%;
+    height: 100%;
+    padding-right: 20px;
+    padding-left: 200px;
+}
+
+.pageTitle {
+    padding-top: 20px;
+    margin-top: 0px;
+}
+
+#disabled-link {
+    background-color: #eee;
+}
+
+a:not([href]):not([tabindex]) {
+    background-color: #eee;
+}
+
+.create-button {
+    margin: 20px 0px;
+}
+
+.paginateBar {
+    text-align: center;
+}
+.pageTitle {
+    text-align: center;
+}
+
+.card-body {
+    width: 400px;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #eee;
+}
+
+.fakedata {
+    text-align: center;
+    margin: 10% 30% ;
+}
