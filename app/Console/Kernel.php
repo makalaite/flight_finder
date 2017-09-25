@@ -2,6 +2,9 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CreateAdmin;
+use App\Console\Commands\CreateFakeAirports;
+use App\Console\Commands\CreateFakeFlights;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +16,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\UseFakeData::class
+        Commands\UseFakeData::class,
+        CreateAdmin::class,
+        CreateFakeAirports::class,
+        CreateFakeFlights::class
     ];
 
     /**
