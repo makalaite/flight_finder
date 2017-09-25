@@ -1,107 +1,124 @@
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+    <title>Flight Finder Search</title>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
+    <link rel="stylesheet" href="{{asset('css/front-end.css')}}">
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @if (Auth::check())
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ url('/login') }}">Login</a>
-                        <a href="{{ url('/register') }}">Register</a>
-                    @endif
-                </div>
+</head>
+<body>
+<div class="flex-center position-ref full-height">
+    @if (Route::has('login'))
+        <div class="top-right links">
+            @if (Auth::check())
+                <a href="{{ url('/home') }}">Home</a>
+            @else
+                <a href="{{ url('/login') }}">Login</a>
+                <a href="{{ url('/register') }}">Register</a>
             @endif
-
-                <div class="content">
-                    <div class="title m-b-md">
-                        Flight finder
-                    </div>
-
-
-                    <div >
-                        {!! Form::open(['method'=>'GET', 'url'=>$route]) !!}
-                        {{Form::label('from', 'From')}}
-                        {{Form::select('origin',$origin)}}
-
-                        {{Form::label('to', 'To')}}
-                        {{Form::select('destination',$destination)}}
-
-                        {{Form::label('date', 'Date')}}
-                        {{Form::date('departure', $date)}}
-
-                    </div>
-
-                    {{Form::submit(('Search')) }}
-
-                    {!! Form::close() !!}
-
-
-                </div>
         </div>
-    </body>
+    @endif
+
+    <div class="content">
+
+        <div class="page-content">
+
+            <div class="container">
+                {{--<h1 class="pageTitle">{{$pageTitle}}</h1>--}}
+                <h1 class="pageTitle">Search for flights</h1>
+
+
+                {{--@if(!(isset($flights)) )--}}
+                <form action="{{ route('app.search.index')  }}" method="get">
+
+                    <div class="form-group">
+                        <label>Departure airport</label>
+
+                        {{ Form::select('origin_id', $origin_id) }}
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Arrival airport</label>
+
+                        {{ Form::select('destination_id', $destination_id) }}
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Departure date</label>
+                        {{ Form::date('departure', $date) }}
+
+                    </div>
+
+
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </form>
+
+                @if(isset($flights))
+
+                    <div style="margin-top: 30px">
+                        <table class="table table-bordered" style="background-color: #fff;">
+                            <thead>
+                            <tr>
+                                @foreach($flights[0] as $key => $value)
+                                    <th>{{$key}}</th>
+                                @endforeach
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                @foreach($flights as $flight)
+
+                                    @foreach ($flight as $key => $value)
+
+                                        @if($key == 'airport_name')
+                                            @foreach($value as $key => $detail)
+                                                @if ($key == 'name')
+
+                                                    <td>{{ $detail }}</td>
+                                                    {{--{{ dd($detail) }}--}}
+
+                                                @endif
+
+                                            @endforeach
+                                        @else
+
+                                            <td>{{ $value }}</td>
+                                        @endif
+                                    @endforeach
+
+
+
+                                    {{--@foreach($flight as $key => $value)--}}
+
+
+
+                                    {{--@endforeach--}}
+                            </tr>
+                            @endforeach
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+
+                @endif
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
 </html>

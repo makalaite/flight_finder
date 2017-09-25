@@ -1,157 +1,98 @@
-@extends('core')
+@extends('admin.main')
 
 @section('content')
 
-    <div><h3> {{ $serviceTitle }}</h3></div>
-    <div>
-        @if(isset($create))
-            <a class="btn btn-success" href="{{route($create)}}"> New one </a>
-        @endif
-    </div>
+    <div class="page-content">
+        @if(isset($list[0]) || isset($list['data'][0]))
 
-    @if(sizeof($list) > 0)
-        <table class="table table-hover">
-            <h3>{{ $tableName }}</h3>
-            <tr>
-                @foreach($list[0] as $key => $value)
-                    <th>{{$key}}</th>
+            <h1 class="pageTitle">{{$pageTitle}}</h1>
+
+            <nav class="paginateBar" style="text-align: center">
+                <ul class="pagination">
+                    @if(($list["current_page"]) === 1)
+                        <li class="disabled-link"><a id="disabled-link">Previous</a></li>
+                    @else
+                        <li class="page-item"><a class="page-link"
+                                                 href="{{route('app.' . strtolower($pageTitle) . '.index')}}?page={{$list["current_page"]-1}}">Previous</a>
+                        </li>
+                    @endif
+
+                    @for($i=1; $i<=$list['last_page']; $i++)
+                        @if($i == $list['current_page'])
+                            <li class="disabled-link"><a class="disabled-link">{{$i}}</a>
+                            </li>
+                        @else
+                            <li class="page-item"><a class="page-link"
+                                                     href="{{route('app.' . strtolower($pageTitle) . '.index')}}?page={{$i}}">{{$i}}</a>
+                            </li>
+                        @endif
+                    @endfor
+
+                    @if(($list["current_page"]) === $list['last_page'])
+                        <li class="disabled-link"><a id="disabled-link">Next</a></li>
+                    @else
+                        <li class="page-item"><a class="page-link"
+                                                 href="{{route('app.' . strtolower($pageTitle) . '.index')}}?page={{$list["current_page"]+1}}">Next</a>
+                        </li>
+                    @endif
+                </ul>
+            </nav>
+
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    @foreach($list['data'][0] as $key => $value)
+                        <th>{{$key}}</th>
+                    @endforeach
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    @foreach($list['data'] as $listItem)
+                        @foreach($listItem as $value)
+                            <td>{{$value}}</td>
+                        @endforeach
+                </tr>
                 @endforeach
 
-                @if(isset($edit))
-                    <th> Redaguoti</th>
-                @endif
-
-                @if(isset($delete))
-                    <th> Ištrinti</th>
-                @endif
-            </tr>
+                </tbody>
+            </table>
 
 
-            @foreach($list as $record)
-                <tr id="{{ $record['id'] }}">
-                    @foreach($record as $key => $value)
-                        @if($key == 'is_active')
-                            <td>@if($value == 1)
-                                    <button onclick="toggleActive( '{{ route($callAction, $record['id']) }}',0 )"
-                                            type="button" class="btn btn-danger">{{ trans('app.disable') }}</button>
-                                    <button onclick="toggleActive( '{{ route($callAction, $record['id']) }}',1 )"
-                                            type="button" style="display:none"
-                                            class="btn btn-success">{{ trans('app.activation') }}</button>
-                                @else
-                                    <button onclick="toggleActive( '{{ route($callAction, $record['id']) }}',0 )"
-                                            type="button" style="display:none"
-                                            class="btn btn-danger">{{ trans('app.disable') }}</button>
-                                    <button onclick="toggleActive( '{{ route($callAction, $record['id']) }}',1 )"
-                                            type="button"
-                                            class="btn btn-success">{{ trans('app.activation') }}</button>
-                                @endif
-                            </td>
+            @if($pageTitle !== 'Countries')
+                <div class="create-button">
+                    <a href="{{ $route }}">
+                        <button type="button" class="btn btn-secondary">
+                            Create new {{strtolower(substr($pageTitle, 0, -1))}} record
+                        </button>
+                    </a>
+                </div>
+            @endif
 
 
-                        @elseif($key == 'translation')
+        @else
+            @if(isset($pageTitle))
+                @if($pageTitle == 'Countries')
+                    <h1 class="pageTitle">{{$pageTitle}}</h1>
+                    <h6>Data base seeds available, ask your beloved programmer to run command</h6>
+                @else
 
-                            @if(isset($value['title']))
-                                <td>{{$value['title'] . ' ' . $value['language_code']}}</td>
+                    <h1 class="pageTitle">{{$pageTitle}}</h1>
 
-                            @else
-                                <td>{{$value['name'] . ' ' . $value['language_code']}}</td>
-                            @endif
-
-
-                        @elseif($key == 'rol')
-                            <td>{{ $value['role_id'] }}</td>
-
-                        @elseif($key == 'image')
-                            @if(isset($value['path']))
-                                <td><img src="{{ $value['path'] }}" height="55" width="60"></td>
-                            @else
-                                <td>Nofoto</td>
-                            @endif
-
-                        @else
-                            <td>{{$value}}</td>
-                        @endif
-
-                    @endforeach
-
-
-                    @if(isset($edit))
-
-                        <td><a href="{{ route($edit, $record['id']) }}">
-                                <button type="button" class="btn btn-primary">Edit</button>
-                            </a>
-                        </td>
-                    @endif
-
-                    @if(isset($delete))
-                        <td>
-                            <button onclick="deleteItem( '{{ route($delete, $record['id']) }}' )"
-                                    class="btn btn-danger">Delete
+                    <div class="create-button">
+                        <a href="{{ $route }}">
+                            <button type="button" class="btn btn-secondary">Create
+                                new {{strtolower(substr($pageTitle, 0, -1))}} record
                             </button>
-                        </td>
-                    @endif
-                </tr>
+                        </a>
+                    </div>
+                @endif
+            @endif
+            <h1 class="pageTitle">No data available</h1>
 
-            @endforeach
+        @endif
 
-        </table>
+    </div>
 
-    @else <h1> {{ trans('app.no_data') }} </h1>
-    @endif
-@endsection
-
-
-@section('scripts')
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        function deleteItem(route) {
-            $.ajax({
-                url: route,
-                type: 'DELETE',
-                dataType: 'json',
-                success: function (response) {
-                    $('#' + response.id).remove();
-                },
-                error: function () {
-                    alert('ERROR')
-                }
-            });
-        }
-        function toggleActive(URL, value) {
-            console.log(URL, value);
-            $.ajax({
-                url: URL,
-                type: 'POST',
-                data: {
-                    is_active: value
-                },
-                success: function (response) {
-//                  console.log($('#' + response.id))
-//                    console.log($('#' + response.id).hide());
-//                    $('#' + response.id).css({
-//                        opacity:0.5,
-//                        backgroundColor: 'grey'
-//                    });
-                    var $danger = ($('#' + response.id).find('.btn-danger'));
-                    var $success = ($('#' + response.id).find('.btn-success'));
-//                  console.log($danger, $success);
-//                    if(response.is_active == 1)
-//                    {
-//                        alert('response is active ' + response.is_active)
-//                    }
-                    if (response.is_active === '1') {
-                        $success.hide();
-                        $danger.show()
-                    } else {
-                        $success.show();
-                        $danger.hide()
-                    }
-                }
-            });
-        }
-    </script>
 @endsection
